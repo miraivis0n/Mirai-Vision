@@ -1,168 +1,213 @@
+/* app/page.tsx — Mirai Vision (revue & optimisée) */
 import Image from "next/image";
 
 export default function Home() {
-  const plans = [
+  const oneOff = [
     {
-      name: "Pack 8s",
+      title: "Pack 8s",
       price: "150€ / vidéo",
-      desc: "Vidéo de 8 secondes optimisée social. 1 aller-retour de révision. 🎁 Offre de lancement : 1 vidéo offerte.",
+      bullets: ["1 vidéo de 8s", "1 aller-retour de révision", "🎁 Lancement : 1 vidéo offerte"],
       link: "https://buy.stripe.com/test_00waEXa4s2WI2hSbJlfjG00",
+      cta: "Payer maintenant",
     },
     {
-      name: "Pack 16s",
+      title: "Pack 16s",
       price: "250€ / vidéo",
-      desc: "Vidéo de 16 secondes optimisée social. 1–2 allers-retours. 🎁 Offre de lancement : 1 vidéo offerte.",
+      bullets: ["1 vidéo de 16s", "1–2 allers-retours", "🎁 Lancement : 1 vidéo offerte"],
       link: "https://buy.stripe.com/test_cNibJ1ccAapa6y8cNpfjG01",
+      cta: "Payer maintenant",
     },
     {
-      name: "Pack 30s",
+      title: "Pack 30s",
       price: "490€ / vidéo",
-      desc: "Vidéo de 30 secondes optimisée social. Export multi-formats (9:16, 16:9). 2 allers-retours. 🎁 Offre de lancement : 1 vidéo offerte.",
+      bullets: ["1 vidéo de 30s", "Exports 9:16 / 16:9 si besoin", "2 allers-retours", "🎁 Lancement : 1 vidéo offerte"],
       link: "https://buy.stripe.com/test_6oU8wP4K868U6y84gTfjG02",
+      cta: "Payer maintenant",
     },
   ];
 
-  const subscriptions = [
+  const subs = [
     {
-      name: "Abonnement 2 vidéos / mois",
+      title: "Abonnement 2 vidéos / mois",
       price: "390€ / mois",
-      desc: "2 vidéos par mois, durée libre. Optimisées social. 🎁 Lancement : -35% le 1er mois.",
+      badge: "Populaire",
+      bullets: ["2 vidéos par mois", "Durée libre", "Brief simple & planning mensuel", "🎁 −35% le 1er mois"],
       link: "https://buy.stripe.com/test_5kQ4gz4K840MaOofZBfjG03",
+      cta: "S’abonner",
     },
     {
-      name: "Abonnement 6 vidéos / mois",
+      title: "Abonnement 6 vidéos / mois",
       price: "990€ / mois",
-      desc: "6 vidéos par mois, durée libre. Optimisées social. 🎁 Lancement : -35% le 1er mois.",
+      badge: "Populaire",
+      bullets: ["6 vidéos par mois", "Durée libre", "Idéal promos & A/B tests", "🎁 −35% le 1er mois"],
       link: "https://buy.stripe.com/test_6oU6oHekIcxig8I14HfjG04",
+      cta: "S’abonner",
     },
     {
-      name: "Abonnement 15 vidéos / mois",
-      price: "1990€ / mois",
-      desc: "15 vidéos par mois, durée libre. Optimisées social. 🎁 Lancement : -35% le 1er mois.",
+      title: "Abonnement 15 vidéos / mois",
+      price: "1 990€ / mois",
+      badge: "Populaire",
+      bullets: ["15 vidéos par mois", "Durée libre", "Calendrier éditorial soutenu", "🎁 −35% le 1er mois"],
       link: "https://buy.stripe.com/test_6oUdR95Oc0OA9Kk3cPfjG05",
+      cta: "S’abonner",
     },
   ];
 
   return (
     <main className="min-h-screen bg-white text-gray-900">
       {/* Header */}
-      <header className="flex items-center justify-between p-6 border-b">
-        <div className="flex items-center space-x-3">
-          <Image
-            src="/logo.png"
-            alt="Mirai Vision Agency"
-            width={50}
-            height={50}
-          />
-          <span className="font-bold text-lg">Mirai Vision</span>
+      <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <a href="/" aria-label="Accueil Mirai Vision" className="flex items-center gap-3">
+            <Image src="/logo.png" alt="Mirai Vision" width={44} height={44} priority className="h-11 w-11" />
+            <span className="sr-only">Mirai Vision</span>
+          </a>
+          <nav className="text-sm" aria-label="Navigation principale">
+            <a href="#pricing" className="hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-black/40 rounded px-1">
+              Packs
+            </a>
+            <span className="mx-3 text-gray-400">•</span>
+            <a href="#subs" className="hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-black/40 rounded px-1">
+              Abonnements
+            </a>
+            <span className="mx-3 text-gray-400">•</span>
+            <a href="#contact" className="hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-black/40 rounded px-1">
+              Contact
+            </a>
+          </nav>
         </div>
-        <nav className="space-x-6">
-          <a href="#pricing" className="hover:opacity-70">
-            Offres
-          </a>
-          <a href="#contact" className="hover:opacity-70">
-            Contact
-          </a>
-        </nav>
       </header>
 
       {/* Hero */}
-      <section className="text-center py-16 px-6">
-        <h1 className="text-4xl font-bold mb-4">
+      <section className="mx-auto max-w-7xl px-4 pb-12 pt-14">
+        <h1 className="text-3xl font-bold sm:text-4xl">
           Studio créatif — vidéos sur mesure (8s, 16s, 30s, mensuel)
         </h1>
-        <p className="text-lg text-gray-600 mb-6">
-          Conception à livraison : idées, génération, montage, exports
-          multi-formats. Projet pub {">"} 1 min → sur devis.
+        <p className="mt-3 max-w-2xl text-gray-600">
+          De l’idée au livrable : conception, génération, montage et exports multi-formats.
+          Projet pub &gt; 1 min → <strong>sur devis</strong>.
         </p>
-        <div className="space-x-4">
-          <a
-            href="#pricing"
-            className="bg-black text-white px-6 py-3 rounded-md"
-          >
-            Voir les offres
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="#pricing" className="rounded-xl bg-black px-5 py-2 text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-black/40">
+            Voir les packs
           </a>
-          <a
-            href="#contact"
-            className="border border-black px-6 py-3 rounded-md"
-          >
-            Parler à un humain
+          <a href="#subs" className="rounded-xl border px-5 py-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black/20">
+            Voir les abonnements
           </a>
         </div>
       </section>
 
-      {/* Packs */}
-      <section id="pricing" className="py-16 px-6 bg-gray-50">
-        <h2 className="text-3xl font-bold text-center mb-12">Nos Packs</h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className="border rounded-xl p-6 flex flex-col justify-between bg-white shadow-sm"
-            >
-              <div>
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                <p className="text-gray-700 mb-4">{plan.desc}</p>
-                <p className="text-2xl font-bold mb-6">{plan.price}</p>
-              </div>
-              <a
-                href={plan.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-black text-white text-center py-3 rounded-md hover:bg-gray-800"
+      {/* Packs ponctuels */}
+      <section id="pricing" aria-labelledby="packs-title" className="py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 id="packs-title" className="text-center text-2xl sm:text-3xl font-semibold">Packs ponctuels</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Achat unique. 🎁 Lancement : 1 vidéo offerte sur chaque pack.</p>
+
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {oneOff.map((p) => (
+              <article
+                key={p.title}
+                className="w-full max-w-sm mx-auto rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden"
+                aria-label={p.title}
               >
-                Payer maintenant
-              </a>
-            </div>
-          ))}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold">{p.title}</h3>
+                  <p className="mt-2 text-2xl font-bold">{p.price}</p>
+                  <ul className="mt-4 space-y-2 text-sm text-gray-700 break-words">
+                    {p.bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-800 flex-none" />
+                        <span className="leading-relaxed">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${p.cta} — ${p.title} (Stripe)`}
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-black px-4 py-3 text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-black/30"
+                  >
+                    {p.cta}
+                  </a>
+                  <p className="mt-2 text-center text-xs text-gray-500">Paiement sécurisé Stripe. Facture PDF automatique.</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Abonnements */}
-      <section id="subscriptions" className="py-16 px-6">
-        <h2 className="text-3xl font-bold text-center mb-12">Abonnements</h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {subscriptions.map((sub) => (
-            <div
-              key={sub.name}
-              className="border rounded-xl p-6 flex flex-col justify-between bg-white shadow-sm"
-            >
-              <div>
-                <h3 className="text-xl font-semibold mb-2">{sub.name}</h3>
-                <p className="text-gray-700 mb-4">{sub.desc}</p>
-                <p className="text-2xl font-bold mb-6">{sub.price}</p>
-              </div>
-              <a
-                href={sub.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-black text-white text-center py-3 rounded-md hover:bg-gray-800"
+      {/* Abonnements mensuels */}
+      <section id="subs" aria-labelledby="subs-title" className="py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 id="subs-title" className="text-center text-2xl sm:text-3xl font-semibold">Abonnements mensuels</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Vidéos récurrentes, <strong>durée libre</strong>. 🎁 −35% le 1er mois.</p>
+
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {subs.map((p) => (
+              <article
+                key={p.title}
+                className="w-full max-w-sm mx-auto rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden"
+                aria-label={p.title}
               >
-                S’abonner
-              </a>
-            </div>
-          ))}
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">{p.title}</h3>
+                    <span className="rounded-full bg-black/90 px-2.5 py-0.5 text-xs text-white">{p.badge}</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold">{p.price}</p>
+                  <ul className="mt-4 space-y-2 text-sm text-gray-700 break-words">
+                    {p.bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-800 flex-none" />
+                        <span className="leading-relaxed">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${p.cta} — ${p.title} (Stripe)`}
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-black px-4 py-3 text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-black/30"
+                  >
+                    {p.cta}
+                  </a>
+                  <p className="mt-2 text-center text-xs text-gray-500">Paiement sécurisé Stripe. Facture & reçus automatiques.</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Contact */}
-      <section id="contact" className="py-16 px-6 bg-gray-50">
-        <h2 className="text-3xl font-bold mb-6">Contact</h2>
-        <p className="text-gray-600 mb-4">Brief, questions, devis sur mesure.</p>
-        <p>
-          📧{" "}
-          <a
-            href="mailto:contact.miraivision@gmail.com"
-            className="underline text-blue-600"
-          >
-            contact.miraivision@gmail.com
-          </a>
-        </p>
+      <section id="contact" className="border-t bg-gray-50 py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <h2 className="text-2xl font-semibold">Contact</h2>
+          <p className="mt-3 text-sm text-gray-700">Brief, questions, devis sur mesure.</p>
+          <div className="mt-2 text-sm">
+            📧{" "}
+            <a className="underline" href="mailto:contact.miraivision@gmail.com">
+              contact.miraivision@gmail.com
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 text-center text-gray-500 text-sm border-t">
-        © {new Date().getFullYear()} Mirai Vision. Tous droits réservés.
+      <footer className="border-t py-10">
+        <div className="mx-auto max-w-7xl px-4 text-sm text-gray-600">
+          <div className="flex flex-col gap-4 md:flex-row md:justify-between">
+            <p>© {new Date().getFullYear()} Mirai Vision. Tous droits réservés.</p>
+            <div className="flex gap-4">
+              <a href="#">Mentions légales</a>
+              <a href="#">Confidentialité</a>
+              <a href="#">CGV</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </main>
   );
