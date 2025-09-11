@@ -4,6 +4,24 @@
 import Link from "next/link";
 import { useRef } from "react";
 
+function BackgroundFX() {
+  // Arrière-plan animé discret (grille + bokeh flou)
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+    >
+      {/* Grille de points très légère */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.06)_1px,transparent_1.5px)] [background-size:18px_18px] opacity-40 animate-grid-pan" />
+
+      {/* Taches floues très pâles (bokeh) */}
+      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.07),transparent_60%)] blur-3xl animate-bokeh-1" />
+      <div className="absolute top-1/3 -right-24 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.05),transparent_60%)] blur-3xl animate-bokeh-2" />
+      <div className="absolute -bottom-32 left-1/4 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.06),transparent_60%)] blur-3xl animate-bokeh-3" />
+    </div>
+  );
+}
+
 export default function TarifsPage() {
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -14,7 +32,6 @@ export default function TarifsPage() {
     const nom = nameRef.current?.value.trim() ?? "";
     const email = emailRef.current?.value.trim() ?? "";
     const message = messageRef.current?.value.trim() ?? "";
-
     const subject = `Demande de devis${nom ? ` — ${nom}` : ""}`;
     const body = `Nom: ${nom}\nEmail: ${email}\n\nProjet:\n${message}`;
     window.location.href = `mailto:contact.miraivision@gmail.com?subject=${encodeURIComponent(
@@ -26,43 +43,51 @@ export default function TarifsPage() {
     {
       tag: "À la carte",
       title: "Vidéo 8 secondes",
-      desc: "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
+      desc:
+        "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
       features: ["Tournage + montage", "Sous-titres si besoin", "Export multi-formats"],
     },
     {
       tag: "À la carte",
       title: "Vidéo 16 secondes",
-      desc: "Format dynamique, parfait pour des campagnes réseaux sociaux.",
+      desc:
+        "Format dynamique, parfait pour des campagnes réseaux sociaux.",
       features: ["Idéation & script léger", "Motion/design", "Export 9:16, 1:1, 16:9"],
     },
     {
       tag: "À la carte",
       title: "Vidéo 30 secondes",
-      desc: "Idéal pour présenter un produit ou un service de manière percutante.",
+      desc:
+        "Idéal pour présenter un produit ou un service de manière percutante.",
       features: ["Accompagnement créatif", "Tournage + montage complet", "Livraison rapide"],
     },
     {
       tag: "Abonnements",
       title: "4 vidéos / mois",
-      desc: "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
+      desc:
+        "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
       features: ["Calendrier éditorial", "Optimisations continues", "Rapide à déployer"],
     },
     {
       tag: "Abonnements",
       title: "8 vidéos / mois",
-      desc: "Volume adapté aux marques actives sur plusieurs canaux.",
+      desc:
+        "Volume adapté aux marques actives sur plusieurs canaux.",
       features: ["Batch tournage", "Variantes multi-formats", "Pilotage des performances"],
     },
     {
       tag: "Abonnements",
       title: "12 vidéos / mois",
-      desc: "Flux soutenu et visibilité maximale.",
+      desc:
+        "Flux soutenu et visibilité maximale.",
       features: ["Process industrialisé", "Réunions hebdo", "Reporting simple"],
     },
   ];
 
   return (
-    <main className="min-h-screen bg-neutral-50 text-neutral-900">
+    <main className="relative min-h-screen bg-neutral-50 text-neutral-900">
+      <BackgroundFX />
+
       <section className="max-w-6xl mx-auto px-6 py-14">
         {/* Bouton retour accueil */}
         <div className="mb-8">
@@ -77,11 +102,12 @@ export default function TarifsPage() {
         {/* En-tête */}
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos offres & devis</h1>
         <p className="mt-3 text-neutral-600">
-          Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur mesure.
-          Pas de paiement en ligne — demandez un devis personnalisé, on s’occupe du reste.
+          Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur
+          mesure. Pas de paiement en ligne — demandez un devis personnalisé, on
+          s’occupe du reste.
         </p>
 
-        {/* Grille des 6 cartes */}
+        {/* Grille des 6 cartes (style clair d’origine) */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {offers.map((o, i) => (
             <article
@@ -123,8 +149,8 @@ export default function TarifsPage() {
         >
           <h2 className="text-2xl font-bold tracking-tight">Demander un devis</h2>
           <p className="mt-2 text-neutral-600">
-            Remplissez ce formulaire — nous revenons rapidement vers vous avec une proposition
-            adaptée à vos besoins.
+            Remplissez ce formulaire — nous revenons rapidement vers vous avec une
+            proposition adaptée à vos besoins.
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
