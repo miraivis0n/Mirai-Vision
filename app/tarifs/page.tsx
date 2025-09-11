@@ -1,10 +1,10 @@
 // app/tarifs/page.tsx
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 
 export default function TarifsPage() {
-  // Refs pour le formulaire mailto
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -26,8 +26,7 @@ export default function TarifsPage() {
     {
       tag: "À la carte",
       title: "Vidéo 8 secondes",
-      desc:
-        "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
+      desc: "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
       features: ["Tournage + montage", "Sous-titres si besoin", "Export multi-formats"],
     },
     {
@@ -45,8 +44,7 @@ export default function TarifsPage() {
     {
       tag: "Abonnements",
       title: "4 vidéos / mois",
-      desc:
-        "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
+      desc: "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
       features: ["Calendrier éditorial", "Optimisations continues", "Rapide à déployer"],
     },
     {
@@ -66,6 +64,16 @@ export default function TarifsPage() {
   return (
     <main className="min-h-screen bg-neutral-50 text-neutral-900">
       <section className="max-w-6xl mx-auto px-6 py-14">
+        {/* Bouton retour accueil */}
+        <div className="mb-8">
+          <Link
+            href="/accueil"
+            className="inline-block rounded-full bg-neutral-900 px-4 py-2 text-white font-semibold hover:bg-black transition"
+          >
+            ← Retour à l’accueil
+          </Link>
+        </div>
+
         {/* En-tête */}
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Nos offres & devis</h1>
         <p className="mt-3 text-neutral-600">
@@ -73,7 +81,7 @@ export default function TarifsPage() {
           Pas de paiement en ligne — demandez un devis personnalisé, on s’occupe du reste.
         </p>
 
-        {/* Grille des 6 cartes — style clair comme avant */}
+        {/* Grille des 6 cartes */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {offers.map((o, i) => (
             <article
@@ -108,7 +116,7 @@ export default function TarifsPage() {
           ))}
         </div>
 
-        {/* Formulaire mailto (clair aussi) */}
+        {/* Formulaire mailto */}
         <section
           id="devis-form"
           className="mt-14 rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm"
