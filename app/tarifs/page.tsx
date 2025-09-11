@@ -1,244 +1,159 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-
-type Offer = {
-  id: string;
-  group: "A la carte" | "Abonnements";
-  title: string;
-  description: string;
-  bullets?: string[];
-};
-
-const OFFERS: Offer[] = [
-  {
-    id: "v8",
-    group: "A la carte",
-    title: "Vidéo 8 secondes",
-    description:
-      "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
-    bullets: ["Tournage + montage", "Sous-titres si besoin", "Export multi-formats"],
-  },
-  {
-    id: "v16",
-    group: "A la carte",
-    title: "Vidéo 16 secondes",
-    description:
-      "Format dynamique, parfait pour les campagnes réseaux sociaux.",
-    bullets: ["Idéation & script léger", "Motion/étalonnage", "Export 9:16, 1:1, 16:9"],
-  },
-  {
-    id: "v30",
-    group: "A la carte",
-    title: "Vidéo 30 secondes",
-    description:
-      "Idéal pour présenter un produit ou un service de manière impactante.",
-    bullets: ["Accompagnement créatif", "Tournage / montage complet", "Livraison rapide"],
-  },
-  {
-    id: "ab4",
-    group: "Abonnements",
-    title: "4 vidéos / mois",
-    description:
-      "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
-    bullets: ["Calendrier éditorial", "Optimisations continues", "Rapide à déployer"],
-  },
-  {
-    id: "ab8",
-    group: "Abonnements",
-    title: "8 vidéos / mois",
-    description:
-      "Volume adapté aux marques actives sur plusieurs canaux.",
-    bullets: ["Batch tournage", "Variantes multi-formats", "Pilotage des performances"],
-  },
-  {
-    id: "ab12",
-    group: "Abonnements",
-    title: "12 vidéos / mois",
-    description:
-      "Idéal pour un flux soutenu et une visibilité maximale.",
-    bullets: ["Process industrialisé", "Itérations hebdo", "Reporting simple"],
-  },
-];
+// app/tarifs/page.tsx
+import React from "react";
 
 export default function TarifsPage() {
-  const [showForm, setShowForm] = useState(false);
-  const [selectedOffer, setSelectedOffer] = useState<string>("");
-
-  const openForm = (offerTitle: string) => {
-    setSelectedOffer(offerTitle);
-    setShowForm(true);
-    setTimeout(() => {
-      document.getElementById("devis")?.scrollIntoView({ behavior: "smooth" });
-    }, 0);
-  };
-
-  const submitByMail = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const nom = String(fd.get("nom") || "");
-    const email = String(fd.get("email") || "");
-    const offre = String(fd.get("offre") || "");
-    const projet = String(fd.get("projet") || "");
-
-    const subject = encodeURIComponent(`Demande de devis – ${offre}`);
-    const body = encodeURIComponent(
-      `Nom : ${nom}\nEmail : ${email}\nOffre : ${offre}\n\nProjet :\n${projet}`
-    );
-    window.location.href = `mailto:contact.miraivision@gmail.com?subject=${subject}&body=${body}`;
-  };
-
-  const Card = ({ offer }: { offer: Offer }) => (
-    <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
-      {/* aucun accent de couleur, on reste N&B */}
-      <div className="p-6">
-        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-          {offer.group}
-        </span>
-        <h3 className="mt-3 text-lg font-semibold text-gray-900">{offer.title}</h3>
-        <p className="mt-2 text-sm text-gray-600">{offer.description}</p>
-        {offer.bullets && (
-          <ul className="mt-4 space-y-1 text-sm text-gray-700">
-            {offer.bullets.map((b, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        <button
-          type="button"
-          onClick={() => openForm(offer.title)}
-          className="mt-6 w-full rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Demander un devis
-        </button>
-      </div>
-    </div>
-  );
-
-  const Hero = () => (
-    <header className="mx-auto max-w-6xl px-4 pt-16 pb-8">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-        Nos offres & devis
-      </h1>
-      <p className="mt-3 max-w-3xl text-gray-600">
-        Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur mesure.
-        Plus besoin de payer en ligne — demandez un <b>devis personnalisé</b>.
-      </p>
-    </header>
-  );
-
   return (
-    <main className="relative min-h-screen">
-      {/* Décor “soleil levant” discret en niveaux de gris, uniquement en arrière-plan */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background:
-            // disque du soleil (blanc -> transparent)
-            "radial-gradient(60% 45% at 50% 82%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.12) 35%, rgba(255,255,255,0) 70%)," +
-            // quelques rayons très doux (gris clair -> transparent)
-            "conic-gradient(from 180deg at 50% 86%, rgba(0,0,0,0.06), rgba(0,0,0,0) 22%)",
-        }}
-      />
+    <main className="relative min-h-screen bg-gray-900 text-gray-100 overflow-hidden">
+      {/* --- Fond décor soleil --- */}
+      <div className="absolute inset-0 -z-10">
+        {/* Halo du soleil */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full bg-white opacity-20 blur-3xl" />
 
-      <Hero />
+        {/* Rayons */}
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bottom-0 left-1/2 w-[2px] h-[600px] bg-white opacity-15"
+            style={{
+              transform: `rotate(${i * 30}deg) translateX(-50%)`,
+              transformOrigin: "bottom center",
+            }}
+          />
+        ))}
 
-      <section className="mx-auto max-w-6xl px-4 pb-8">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {OFFERS.map((offer) => (
-            <Card key={offer.id} offer={offer} />
-          ))}
+        {/* Horizon */}
+        <div className="absolute bottom-0 left-0 w-full h-[200px] bg-gradient-to-t from-black/80 to-transparent" />
+
+        {/* Vignettage */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40" />
+      </div>
+
+      {/* --- Contenu --- */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+        <h1 className="text-3xl font-bold mb-6">Nos offres & devis</h1>
+        <p className="text-gray-300 mb-12">
+          Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur mesure.
+          Plus besoin de payer directement en ligne — demandez un devis personnalisé, 
+          on s’occupe du reste.
+        </p>
+
+        {/* Grille des offres */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Carte 1 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Vidéo 8 secondes</h3>
+            <p className="text-gray-300 mb-4">
+              Idéale pour les formats très courts (TikTok, Reels, Shorts).
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Tournage + montage</li>
+              <li>Sous-titres si besoin</li>
+              <li>Export multi-formats</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Vidéo 8s"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
+
+          {/* Carte 2 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Vidéo 16 secondes</h3>
+            <p className="text-gray-300 mb-4">
+              Format dynamique, parfait pour des campagnes réseaux sociaux.
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Idéation & script léger</li>
+              <li>Motion/étalonnage</li>
+              <li>Export 9:16, 1:1, 16:9</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Vidéo 16s"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
+
+          {/* Carte 3 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Vidéo 30 secondes</h3>
+            <p className="text-gray-300 mb-4">
+              Idéal pour présenter un produit ou un service de manière impactante.
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Accompagnement créatif</li>
+              <li>Tournage / montage complet</li>
+              <li>Livraison rapide</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Vidéo 30s"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
+
+          {/* Carte 4 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">4 vidéos / mois</h3>
+            <p className="text-gray-300 mb-4">
+              Rythme mensuel pour entretenir votre présence avec des contenus réguliers.
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Calendrier éditorial</li>
+              <li>Optimisations continues</li>
+              <li>Rapide à déployer</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Abonnement 4 vidéos/mois"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
+
+          {/* Carte 5 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">8 vidéos / mois</h3>
+            <p className="text-gray-300 mb-4">
+              Volume adapté aux marques actives sur plusieurs canaux.
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Batch tournage</li>
+              <li>Variantes multi-formats</li>
+              <li>Pilotage des performances</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Abonnement 8 vidéos/mois"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
+
+          {/* Carte 6 */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">12 vidéos / mois</h3>
+            <p className="text-gray-300 mb-4">
+              Idéal pour un flux soutenu et une visibilité maximale.
+            </p>
+            <ul className="text-gray-400 text-sm space-y-1 mb-6 list-disc list-inside">
+              <li>Process industrialisé</li>
+              <li>Réunions hebdo</li>
+              <li>Reporting simple</li>
+            </ul>
+            <a
+              href="mailto:contact.miraivision@gmail.com?subject=Demande de devis - Abonnement 12 vidéos/mois"
+              className="block text-center bg-yellow-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-yellow-300 transition"
+            >
+              Demander un devis
+            </a>
+          </div>
         </div>
       </section>
-
-      {showForm && (
-        <section id="devis" className="mx-auto max-w-3xl px-4 pb-20">
-          <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900">Demander un devis</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Remplissez ce formulaire — nous revenons vers vous rapidement avec
-              une proposition adaptée.
-            </p>
-
-            <form onSubmit={submitByMail} className="mt-6 space-y-4">
-              <div>
-                <label htmlFor="offre" className="text-sm font-medium text-gray-900">
-                  Offre choisie
-                </label>
-                <input
-                  id="offre"
-                  name="offre"
-                  defaultValue={selectedOffer}
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
-                />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="nom" className="text-sm font-medium text-gray-900">
-                    Votre nom
-                  </label>
-                  <input
-                    id="nom"
-                    name="nom"
-                    autoComplete="name"
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="text-sm font-medium text-gray-900">
-                    Votre email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="projet" className="text-sm font-medium text-gray-900">
-                  Expliquez votre projet
-                </label>
-                <textarea
-                  id="projet"
-                  name="projet"
-                  rows={5}
-                  placeholder="Objectif, cible, style souhaité, deadline…"
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
-                />
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  type="submit"
-                  className="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Envoyer la demande
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="text-sm font-medium text-gray-600 underline-offset-2 hover:underline"
-                >
-                  Annuler
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
-      )}
     </main>
   );
 }
