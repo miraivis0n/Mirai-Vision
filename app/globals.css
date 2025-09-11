@@ -1,37 +1,35 @@
+/* --- Tailwind: indispensable --- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== Animations personnalisées ===== */
-
-/* Halo doux qui se déplace */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translateY(-20px) translateX(20px);
-    opacity: 0.7;
-  }
+/* On s’assure que la page occupe toute la hauteur */
+html, body {
+  height: 100%;
 }
 
-.animate-float {
-  animation: float 8s ease-in-out infinite;
+/* Décor discret en arrière-plan :
+   - 3 dégradés radiaux très doux
+   - ne capte pas la souris (pointer-events:none)
+   - z-index < contenu, donc ne change rien aux cartes
+*/
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(800px 400px at 0% 0%, rgba(0,0,0,0.06), transparent 60%),
+    radial-gradient(700px 500px at 100% 10%, rgba(0,0,0,0.05), transparent 60%),
+    radial-gradient(600px 600px at 50% 120%, rgba(0,0,0,0.07), transparent 60%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  mix-blend-mode: normal;
 }
 
-/* Dégradé radial qui pulse doucement */
-@keyframes pulse-bg {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.1);
-  }
-}
-
-.animate-pulse-bg {
-  animation: pulse-bg 12s ease-in-out infinite;
+/* On garde le contenu au-dessus du décor */
+main, header, section, footer {
+  position: relative;
+  z-index: 1;
 }
