@@ -1,31 +1,32 @@
-/* --- Tailwind: indispensable --- */
+/* === Tailwind : indispensable === */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* On s’assure que la page occupe toute la hauteur */
+/* On s’assure que la page prend toute la hauteur */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-/* Décor discret en arrière-plan :
-   - 3 dégradés radiaux très doux
-   - ne capte pas la souris (pointer-events:none)
-   - z-index < contenu, donc ne change rien aux cartes
-*/
+/* 🎨 Fond animé discret en arrière-plan */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
-  background-image:
-    radial-gradient(800px 400px at 0% 0%, rgba(0,0,0,0.06), transparent 60%),
-    radial-gradient(700px 500px at 100% 10%, rgba(0,0,0,0.05), transparent 60%),
-    radial-gradient(600px 600px at 50% 120%, rgba(0,0,0,0.07), transparent 60%);
-  background-repeat: no-repeat;
-  background-size: cover;
-  mix-blend-mode: normal;
+  background: linear-gradient(135deg, #f9f9f9 25%, #eaeaea 100%);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+  pointer-events: none; /* important : ne gêne pas les clics */
+}
+
+/* Animation du fond */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* On garde le contenu au-dessus du décor */
