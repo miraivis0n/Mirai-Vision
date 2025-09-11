@@ -1,328 +1,248 @@
-// app/tarifs/page.tsx
-import Link from "next/link";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Nos offres & devis – Mirai Vision",
-  description:
-    "De la courte vidéo à l’abonnement mensuel. Décrivez votre besoin et recevez un devis personnalisé.",
-};
+import { FormEvent, useState } from "react";
 
-/* ---- Arrière-plan lever de soleil, discret ---- */
-function SunriseBackground() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {/* ciel chaud vers blanc */}
-      <div
-        className="
-          absolute inset-0
-          [background:
-            radial-gradient(circle_at_50%_120%,_#FFD08A_0%,_#FFE8C8_40%,_transparent_62%),
-            linear-gradient(to_bottom,_#FFF7ED,_#FFFFFF_45%,_#FFFFFF)
-          ]
-        "
-      />
-      {/* rayons doux en bas */}
-      <div
-        className="
-          absolute inset-x-0 bottom-[-8%] h-[55%]
-          [mask-image:radial-gradient(ellipse_at_50%_120%,black_40%,transparent_72%)]
-          bg-[conic-gradient(from_180deg_at_50%_100%,rgba(255,186,73,0.22)_0deg,transparent_18deg,rgba(255,186,73,0.22)_36deg,transparent_54deg,rgba(255,186,73,0.22)_72deg,transparent_90deg,rgba(255,186,73,0.22)_108deg,transparent_126deg,rgba(255,186,73,0.22)_144deg,transparent_162deg,rgba(255,186,73,0.22)_180deg)]
-          blur-[1px]
-        "
-      />
-    </div>
-  );
-}
-
-/* ---- Cartes d’offres ---- */
-type Card = {
+type Offer = {
+  id: string;
+  group: "A la carte" | "Abonnements";
   title: string;
-  lines: string[];
-  note?: string;
-  planKey: string;
+  description: string;
+  bullets?: string[];
 };
 
-const singleShots: Card[] = [
+const OFFERS: Offer[] = [
   {
+    id: "v8",
+    group: "A la carte",
     title: "Vidéo 8 secondes",
-    lines: [
-      "Idéale pour TikTok, Reels, Shorts.",
-      "Conception → livraison, exports multi-formats.",
-      "1 aller-retour de révision inclus.",
-    ],
-    note: "Tarification sur devis (pas de paiement en ligne).",
-    planKey: "video-8s",
+    description:
+      "Idéale pour les formats très courts (TikTok, Reels, Shorts). Impact rapide.",
+    bullets: ["Tournage + montage", "Sous-titres si besoin", "Export multi-formats"]
   },
   {
+    id: "v16",
+    group: "A la carte",
     title: "Vidéo 16 secondes",
-    lines: [
-      "Format dynamique pour campagnes sociales.",
-      "Idéal pour annonces et UGC courts.",
-      "1–2 allers-retours de révision inclus.",
-    ],
-    note: "Tarification sur devis (pas de paiement en ligne).",
-    planKey: "video-16s",
+    description:
+      "Format dynamique, parfait pour les campagnes réseaux sociaux.",
+    bullets: ["Idéation & script léger", "Motion/étalonnage", "Export 9:16, 1:1, 16:9"]
   },
   {
+    id: "v30",
+    group: "A la carte",
     title: "Vidéo 30 secondes",
-    lines: [
-      "Parfait pour présenter un produit/service.",
-      "Exports 9:16, 1:1, 16:9 fournis.",
-      "2 allers-retours de révision inclus.",
-    ],
-    note: "Tarification sur devis (pas de paiement en ligne).",
-    planKey: "video-30s",
+    description:
+      "Idéal pour présenter un produit ou un service de manière impactante.",
+    bullets: ["Accompagnement créatif", "Tournage / montage complet", "Livraison rapide"]
   },
+  {
+    id: "ab4",
+    group: "Abonnements",
+    title: "4 vidéos / mois",
+    description:
+      "Rythme mensuel pour entretenir votre présence avec des contenus réguliers.",
+    bullets: ["Calendrier éditorial", "Optimisations continues", "Rapide à déployer"]
+  },
+  {
+    id: "ab8",
+    group: "Abonnements",
+    title: "8 vidéos / mois",
+    description:
+      "Volume adapté aux marques actives sur plusieurs canaux.",
+    bullets: ["Batch tournage", "Variantes multi-formats", "Pilotage des performances"]
+  },
+  {
+    id: "ab12",
+    group: "Abonnements",
+    title: "12 vidéos / mois",
+    description:
+      "Idéal pour un flux soutenu et une visibilité maximale.",
+    bullets: ["Process industrialisé", "Itérations hebdo", "Reporting simple"]
+  }
 ];
 
-const subscriptions: Card[] = [
-  {
-    title: "Abonnement 6 vidéos / mois",
-    lines: [
-      "Idéal pour un rythme social soutenu.",
-      "Brief mensuel, idées, génération, montage.",
-      "Multi-formats et suivi simple.",
-    ],
-    note: "Engagement flexible — devis personnalisé.",
-    planKey: "abo-6",
-  },
-  {
-    title: "Abonnement 15 vidéos / mois",
-    lines: [
-      "Volume élevé pour marques et agences.",
-      "Process agile, calendrier éditorial, batch tournage.",
-      "Options motion/étalonnage sur demande.",
-    ],
-    note: "Engagement flexible — devis personnalisé.",
-    planKey: "abo-15",
-  },
-  {
-    title: "Sur-mesure (UGC, 10s, 30s, mensuel)",
-    lines: [
-      "Du concept à la livraison : idées, script, tournage, montage.",
-      "Exports multi-formats adaptés à vos canaux.",
-      "Mesures de résultats, process clair.",
-    ],
-    note: "Projet publicitaire > 1 min → sur devis.",
-    planKey: "sur-mesure",
-  },
-];
-
-/* ---- Page ---- */
 export default function TarifsPage() {
-  return (
-    <main className="relative overflow-hidden min-h-screen bg-white text-gray-900">
-      <SunriseBackground />
+  const [showForm, setShowForm] = useState(false);
+  const [selectedOffer, setSelectedOffer] = useState<string>("");
 
-      {/* Header simple */}
-      <header className="border-b">
-        <div className="mx-auto max-w-6xl px-4 py-6 flex items-center justify-between gap-3">
-          <Link href="/accueil" className="flex items-center gap-3 hover:opacity-80">
-            <img src="/logo.png" alt="Mirai Vision" width={28} height={28} className="rounded-sm" />
-            <span className="font-semibold tracking-tight">Mirai Vision</span>
-          </Link>
-
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/accueil#offres" className="hover:underline">
-              Accueil
-            </Link>
-            <a href="#devis" className="inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm hover:bg-gray-50">
-              Demander un devis
-            </a>
-          </nav>
-        </div>
-      </header>
-
-      {/* Intro */}
-      <section className="mx-auto max-w-6xl px-4 py-10">
-        <h1 className="text-3xl font-semibold sm:text-4xl">Nos offres & devis</h1>
-        <p className="mt-2 text-gray-600">
-          Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur mesure. Plus de paiement en ligne — vous pouvez désormais
-          demander un <strong>devis personnalisé</strong>.
-        </p>
-      </section>
-
-      {/* Offres par vidéo */}
-      <section id="offres" className="mx-auto max-w-6xl px-4 pb-3">
-        <h2 className="text-xl font-semibold mb-4">Vidéos à l’unité</h2>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {singleShots.map((c) => (
-            <article key={c.planKey} className="rounded-2xl border bg-white/80 backdrop-blur px-5 py-6 shadow-sm">
-              <h3 className="text-lg font-semibold">{c.title}</h3>
-
-              <ul className="mt-3 space-y-2 text-sm text-gray-700">
-                {c.lines.map((l, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-gray-400" />
-                    <span>{l}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {c.note && <p className="mt-3 text-xs text-gray-500">{c.note}</p>}
-
-              <button
-                data-plan={c.planKey}
-                onClick={handleAskDevis}
-                className="mt-5 w-full rounded-lg border bg-black px-4 py-2 text-white hover:opacity-90"
-              >
-                Demander un devis
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Abonnements */}
-      <section className="mx-auto max-w-6xl px-4 py-6">
-        <h2 className="text-xl font-semibold mb-4">Abonnements</h2>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {subscriptions.map((c) => (
-            <article key={c.planKey} className="rounded-2xl border bg-white/80 backdrop-blur px-5 py-6 shadow-sm">
-              <h3 className="text-lg font-semibold">{c.title}</h3>
-
-              <ul className="mt-3 space-y-2 text-sm text-gray-700">
-                {c.lines.map((l, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 block h-1.5 w-1.5 rounded-full bg-gray-400" />
-                    <span>{l}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {c.note && <p className="mt-3 text-xs text-gray-500">{c.note}</p>}
-
-              <button
-                data-plan={c.planKey}
-                onClick={handleAskDevis}
-                className="mt-5 w-full rounded-lg border bg-black px-4 py-2 text-white hover:opacity-90"
-              >
-                Demander un devis
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Formulaire Devis */}
-      <section id="devis" className="mx-auto max-w-3xl px-4 py-10">
-        <h2 className="text-xl font-semibold">Demander un devis</h2>
-        <p className="mt-2 text-gray-600">
-          Remplissez ce formulaire — nous vous répondons rapidement avec une proposition adaptée à vos besoins.
-        </p>
-
-        <form onSubmit={sendMailto} className="mt-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Type d’offre</label>
-            <input
-              id="plan"
-              name="plan"
-              type="text"
-              placeholder="Ex. Vidéo 16 secondes, Abonnement 6 vidéos, Sur-mesure…"
-              className="mt-1 w-full rounded-md border px-3 py-2"
-              required
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="block text-sm font-medium">Votre nom</label>
-              <input name="name" type="text" className="mt-1 w-full rounded-md border px-3 py-2" required />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">Votre email</label>
-              <input name="email" type="email" className="mt-1 w-full rounded-md border px-3 py-2" required />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Expliquez votre projet</label>
-            <textarea
-              name="message"
-              rows={6}
-              className="mt-1 w-full rounded-md border px-3 py-2"
-              placeholder="Objectif, durée souhaitée, style, références, délais…"
-              required
-            />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="submit"
-              className="rounded-lg bg-black px-4 py-2 text-white hover:opacity-90"
-              title="Envoi par email"
-            >
-              Envoyer la demande
-            </button>
-            <a href="mailto:contact.miraivision@gmail.com" className="text-sm underline">
-              ou écrivez-nous directement
-            </a>
-          </div>
-        </form>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t">
-        <div className="mx-auto max-w-6xl px-4 py-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <span className="text-sm text-gray-600">© {new Date().getFullYear()} Mirai Vision. Tous droits réservés.</span>
-          <div className="flex gap-6 text-sm">
-            <a href="/mentions-legales" className="hover:underline">
-              Mentions légales
-            </a>
-            <a href="/confidentialite" className="hover:underline">
-              Confidentialité
-            </a>
-          </div>
-        </div>
-      </footer>
-    </main>
-  );
-}
-
-/* ===== Helpers (client) =====
-   - Pré-remplit le champ “plan” et scrolle au formulaire
-   - Envoie un mailto propre au submit
-*/
-function handleAskDevis(e: React.MouseEvent<HTMLButtonElement>) {
-  e.preventDefault();
-  const plan = (e.currentTarget.getAttribute("data-plan") || "").trim();
-  const input = document.getElementById("plan") as HTMLInputElement | null;
-
-  // Définit un libellé lisible pour chaque plan
-  const labels: Record<string, string> = {
-    "video-8s": "Vidéo 8 secondes",
-    "video-16s": "Vidéo 16 secondes",
-    "video-30s": "Vidéo 30 secondes",
-    "abo-6": "Abonnement 6 vidéos / mois",
-    "abo-15": "Abonnement 15 vidéos / mois",
-    "sur-mesure": "Offre sur-mesure",
+  const openForm = (offerTitle: string) => {
+    setSelectedOffer(offerTitle);
+    setShowForm(true);
+    // Scroll vers le formulaire
+    setTimeout(() => {
+      document.getElementById("devis")?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
   };
 
-  if (input) {
-    input.value = labels[plan] || plan || "Offre (précisez)";
-    input.focus();
-  }
+  const submitByMail = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const nom = String(fd.get("nom") || "");
+    const email = String(fd.get("email") || "");
+    const offre = String(fd.get("offre") || "");
+    const projet = String(fd.get("projet") || "");
 
-  // scroll vers la section devis
-  const section = document.getElementById("devis");
-  section?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+    const subject = encodeURIComponent(`Demande de devis – ${offre}`);
+    const body = encodeURIComponent(
+      `Nom : ${nom}\nEmail : ${email}\nOffre : ${offre}\n\nProjet :\n${projet}`
+    );
 
-function sendMailto(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const plan = (form.elements.namedItem("plan") as HTMLInputElement).value;
-  const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-  const message = (form.elements.namedItem("message") as HTMLTextAreaElement).value;
+    window.location.href = `mailto:contact.miraivision@gmail.com?subject=${subject}&body=${body}`;
+  };
 
-  const subject = encodeURIComponent(`Devis – ${plan}`);
-  const body = encodeURIComponent(
-    `Nom: ${name}\nEmail: ${email}\n\nProjet:\n${message}\n`
+  const Card = ({ offer }: { offer: Offer }) => (
+    <div className="group relative overflow-hidden rounded-2xl border bg-white/80 shadow-sm transition hover:shadow-md">
+      <div className="absolute inset-x-0 -top-20 h-40 bg-gradient-to-b from-yellow-200/40 to-transparent blur-2xl pointer-events-none" aria-hidden />
+      <div className="p-6">
+        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+          {offer.group}
+        </span>
+        <h3 className="mt-3 text-lg font-semibold">{offer.title}</h3>
+        <p className="mt-2 text-sm text-gray-600">{offer.description}</p>
+        {offer.bullets && (
+          <ul className="mt-4 space-y-1 text-sm text-gray-700">
+            {offer.bullets.map((b, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-500" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button
+          type="button"
+          onClick={() => openForm(offer.title)}
+          className="mt-6 w-full rounded-xl bg-yellow-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+        >
+          Demander un devis
+        </button>
+      </div>
+    </div>
   );
 
-  window.location.href = `mailto:contact.miraivision@gmail.com?subject=${subject}&body=${body}`;
+  const Hero = () => (
+    <header className="mx-auto max-w-6xl px-4 pt-16 pb-8">
+      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+        Nos offres & devis
+      </h1>
+      <p className="mt-3 max-w-3xl text-gray-600">
+        Nous réalisons des vidéos adaptées à vos besoins : 8s, 16s, 30s ou sur
+        mesure. Plus besoin de payer en ligne — vous demandez un <b>devis personnalisé</b>
+        , on s’occupe du reste.
+      </p>
+    </header>
+  );
+
+  return (
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Décor “lever de soleil” en arrière-plan */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 50% 80%, rgba(253,224,71,0.35) 0%, rgba(253,224,71,0.15) 40%, rgba(255,255,255,0) 70%)," + // soleil
+            "conic-gradient(from 180deg at 50% 85%, rgba(253,224,71,0.18), rgba(255,255,255,0) 25%)", // quelques rayons
+        }}
+      />
+
+      <Hero />
+
+      <section className="mx-auto max-w-6xl px-4 pb-8">
+        {/* Grille des 6 cartes */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {OFFERS.map((offer) => (
+            <Card key={offer.id} offer={offer} />
+          ))}
+        </div>
+      </section>
+
+      {/* Formulaire de devis (affiché après clic) */}
+      {showForm && (
+        <section id="devis" className="mx-auto max-w-3xl px-4 pb-20">
+          <div className="mt-10 rounded-2xl border bg-white/80 p-6 shadow-sm backdrop-blur">
+            <h2 className="text-2xl font-bold">Demander un devis</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Remplissez ce formulaire — nous revenons vers vous rapidement avec
+              une proposition adaptée.
+            </p>
+
+            <form onSubmit={submitByMail} className="mt-6 space-y-4">
+              <div>
+                <label htmlFor="offre" className="text-sm font-medium">
+                  Offre choisie
+                </label>
+                <input
+                  id="offre"
+                  name="offre"
+                  defaultValue={selectedOffer}
+                  required
+                  className="mt-1 w-full rounded-lg border px-3 py-2"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="nom" className="text-sm font-medium">
+                    Votre nom
+                  </label>
+                  <input
+                    id="nom"
+                    name="nom"
+                    autoComplete="name"
+                    required
+                    className="mt-1 w-full rounded-lg border px-3 py-2"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Votre email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="mt-1 w-full rounded-lg border px-3 py-2"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="projet" className="text-sm font-medium">
+                  Expliquez votre projet
+                </label>
+                <textarea
+                  id="projet"
+                  name="projet"
+                  rows={5}
+                  placeholder="Objectif, cible, style souhaité, deadline…"
+                  required
+                  className="mt-1 w-full rounded-lg border px-3 py-2"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  type="submit"
+                  className="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  Envoyer la demande
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="text-sm font-medium text-gray-600 underline-offset-2 hover:underline"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      )}
+    </main>
+  );
 }
